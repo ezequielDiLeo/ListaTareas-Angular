@@ -1,11 +1,39 @@
+<app-nav-bar></app-nav-bar>
 <div class="cont-tareas">
-  <h2>Lista de tareas</h2>
-  <ul>
-    <li *ngFor="let tarea of listaTareas; let i = index">
-    {{tarea}}
-    <button class="eliminar" (click)="eliminarTarea(i)">Eliminar</button>
-  </li>
-    <input type="text" placeholder="Nueva tarea" [(ngModel)]="nuevaTarea">
-    <button class="agregar" (click)="agregarTarea()">Agregar Tarea</button>
-  </ul>
+  <div class="cont-nueva">
+    <input name="tarea" type="text" placeholder="Nueva tarea" [(ngModel)]="nuevaTarea" class="input-tarea">
+    <button (click)="agregarTarea()" [disabled]="!nuevaTarea.trim()">Agregar</button>
+    @if (!nuevaTarea.trim()) {
+      <p class="escribir-tarea">Ingrese una tarea para agregarla</p>
+    }
+  </div>
+
+  <div class="tabs">
+    <button [class.active]="tabActiva === 'pendientes'" (click)="tabActiva = 'pendientes'">📋 Por completar</button>
+    <button [class.active]="tabActiva === 'completadas'" (click)="tabActiva = 'completadas'">✅ Completadas</button>
+  </div>
+
+  <div class="contenedor-ul">
+    <ul *ngIf="tabActiva === 'pendientes'">
+      <li *ngFor="let tarea of tareasPendientes">
+        <span>{{ tarea.texto }}</span>
+        <div class="acciones">
+          <button title="Marcar como completada" (click)="toggleTarea(obtenerIndexOriginal(tarea))">✅</button>
+          <button title="Eliminar" (click)="eliminarTarea(obtenerIndexOriginal(tarea))">🗑️</button>
+        </div>
+      </li>
+    </ul>
+
+    <ul *ngIf="tabActiva === 'completadas'">
+      <li *ngFor="let tarea of tareasCompletadas">
+        <span><s>{{ tarea.texto }}</s></span>
+        <div class="acciones">
+          <button title="Marcar como pendiente" (click)="toggleTarea(obtenerIndexOriginal(tarea))">↩️</button>
+          <button title="Eliminar" (click)="eliminarTarea(obtenerIndexOriginal(tarea))">🗑️</button>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>
+
+<app-footer></app-footer>

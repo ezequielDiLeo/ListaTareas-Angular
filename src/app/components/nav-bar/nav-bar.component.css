@@ -1,0 +1,161 @@
+.header{
+  width: 100%;
+  height: 80px;
+  display: flex;
+  position: fixed;
+  z-index: 999;
+  transition: all 0.7s ease;
+}
+
+.cont-header{
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgb(78, 78, 78), rgb(31, 31, 31));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.7s ease;
+}
+
+.cont-img{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.anchor{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+}
+
+img{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: auto;
+  height: 100%;
+  padding: 5px 5px 5px 30px;
+}
+
+.imgLogo{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width:200px;
+  height: 60px;
+  cursor: pointer;
+  transition: all 0.7s ease;
+}
+
+.cont-pagination{
+  display: flex;
+  padding-right: 60px;
+  text-decoration: none;
+}
+
+.cont-ul{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  list-style: none;
+  text-decoration: none;
+}
+
+.con-items{
+  padding-right: 20px;
+  text-decoration: none;
+}
+
+.lista{
+  padding: 15px;
+  color: black;
+  font-size: 23px;
+  transition: all ease 0.3s;
+  cursor: pointer;
+  list-style: none;
+  text-decoration: none;
+}
+
+.active{
+  text-decoration: none;
+  list-style: none;
+  border-bottom: 0.3px solid rgb(181, 181, 181);
+}
+a{
+  text-decoration: none;
+}
+
+.lista:hover{
+  color: rgb(78, 67, 1);
+  border-bottom: 0.3px solid rgb(181, 181, 181);
+}
+
+.cont-search{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding-right: 25px;
+  padding-left: 25px;
+}
+
+/* SCROLLY */
+
+header.abajo{
+  width: 100%;
+  height: 70px;
+  background: linear-gradient(rgb(78, 78, 78), rgb(31, 31, 31));
+  display: flex;
+  justify-content: center;
+  transition: all 0.7s ease;
+}
+
+header.abajo .imgLogo {
+  width:200px;
+  height: 60px;
+}
+
+header.abajo ul{
+  display: none;
+}
+
+header.abajo .cont-img{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+}
+
+header.abajo .cont-search{
+  display: none;
+}
+
+.utre {
+opacity: 0;
+transition: opacity 0.5s ease-in-out;
+color: rgb(212, 212, 212);
+}
+
+header.abajo .utre {
+opacity: 1;
+}
+
+
+  @media screen and (max-width: 900px) {
+    .cont-pagination {
+      display: none;
+    }
+
+    .menu-hamburguesa {
+      display: block;
+    }
+  }
