@@ -149,6 +149,79 @@ header.abajo .utre {
 opacity: 1;
 }
 
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 72px;
+  border-bottom: 1px solid rgba(233, 233, 239, .9);
+  background: rgba(255, 255, 255, .92);
+  backdrop-filter: blur(14px);
+}
+
+.topbar-inner {
+  max-width: 1040px;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #20212a;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 850;
+  letter-spacing: -.02em;
+}
+
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: white;
+  background: #7869e6;
+  box-shadow: 0 7px 18px rgba(120, 105, 230, .22);
+}
+
+.brand-mark svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ececf3;
+  border-radius: 50%;
+  color: #706a98;
+  background: #f5f4fb;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+@media (max-width: 1104px) {
+  .topbar-inner { padding: 0 32px; }
+}
+
+@media (max-width: 480px) {
+  .topbar-inner { padding: 0 16px; }
+}
 
   @media screen and (max-width: 900px) {
     .cont-pagination {

@@ -1,61 +1,100 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterOutlet } from '@angular/router';
 import { Tarea, TareasService } from './services/tareas.service';
-import { FooterComponent } from "./components/footer/footer.component";
-import { NavBarComponent } from "./components/nav-bar/nav-bar.component";
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, FooterComponent, NavBarComponent],
+  imports: [CommonModule, FormsModule, NavBarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit{
-
-  listaTareas: Tarea[] = [];
+export class AppComponent implements OnInit {
+  tareas: Tarea[] = [];
   nuevaTarea = '';
-  tabActiva: 'pendientes' | 'completadas' = 'pendientes';
+  busqueda = '';
+  filtro: 'todas' | 'pendientes' | 'completadas' = 'todas';
+  editandoId: string | null = null;
+  textoEdicion = '';
+  mensaje = '';
 
-
-  private _tareaServices = inject(TareasService);
+  private readonly tareasService = inject(TareasService);
 
   ngOnInit(): void {
-    this.listaTareas = this._tareaServices.getTareas()
+    this.tareas = this.tareasService.getTareas();
   }
 
-   get tareasPendientes(): Tarea[] {
-    return this.listaTareas.filter(tarea => !tarea.completada);
-   }
-
-   get tareasCompletadas(): Tarea[] {
-    return this.listaTareas.filter(t => t.completada);
+  get pendientes(): Tarea[] {
+    return this.tareas.filter((tarea) => !tarea.completada);
   }
 
-  agregarTarea(){
-    const tareaLimpia = this.nuevaTarea.trim();
-    if(!tareaLimpia) return;
+  get completadas(): Tarea[] {
+    return this.tareas.filter((tarea) => tarea.completada);
+  }
 
-    this._tareaServices.agregarTarea(this.nuevaTarea)
+  get progreso(): number {
+    return this.tareas.length ? Math.round((this.completadas.length / this.tareas.length) * 100) : 0;
+  }
+
+  get tareasVisibles(): Tarea[] {
+    const texto = this.busqueda.trim().toLocaleLowerCase();
+    return this.tareas.filter((tarea) => {
+      const coincideFiltro = this.filtro === 'todas'
+        || (this.filtro === 'pendientes' && !tarea.completada)
+        || (this.filtro === 'completadas' && tarea.completada);
+      const coincideTexto = !texto || tarea.texto.toLocaleLowerCase().includes(texto);
+      return coincideFiltro && coincideTexto;
+    });
+  }
+
+  agregarTarea(): void {
+    const tarea = this.tareasService.agregarTarea(this.nuevaTarea);
+    if (!tarea) return;
+
     this.nuevaTarea = '';
-    this.listaTareas = this._tareaServices.getTareas();
+    this.recargar('Tarea agregada');
   }
 
-  eliminarTarea(index: number){
-    this._tareaServices.eliminarTarea(index);
-    this.listaTareas = this._tareaServices.getTareas()
+  toggleTarea(tarea: Tarea): void {
+    this.tareasService.toggleCompleta(tarea.id);
+    this.recargar(tarea.completada ? 'Tarea restaurada' : 'Tarea completada');
   }
 
-  toggleTarea(index: number) {
-    this._tareaServices.toggleCompleta(index);
-    this.listaTareas = this._tareaServices.getTareas();
+  eliminarTarea(tarea: Tarea): void {
+    this.tareasService.eliminarTarea(tarea.id);
+    if (this.editandoId === tarea.id) this.cancelarEdicion();
+    this.recargar('Tarea eliminada');
   }
 
-  obtenerIndexOriginal(tarea: Tarea): number {
-    return this.listaTareas.findIndex(t => t === tarea);
+  comenzarEdicion(tarea: Tarea): void {
+    this.editandoId = tarea.id;
+    this.textoEdicion = tarea.texto;
   }
 
+  guardarEdicion(tarea: Tarea): void {
+    if (!this.textoEdicion.trim()) return;
+    this.tareasService.editarTarea(tarea.id, this.textoEdicion);
+    this.cancelarEdicion();
+    this.recargar('Cambios guardados');
+  }
 
+  cancelarEdicion(): void {
+    this.editandoId = null;
+    this.textoEdicion = '';
+  }
+
+  eliminarCompletadas(): void {
+    const cantidad = this.tareasService.eliminarCompletadas();
+    if (cantidad) this.recargar(`${cantidad} tarea${cantidad === 1 ? '' : 's'} eliminada${cantidad === 1 ? '' : 's'}`);
+  }
+
+  private recargar(mensaje: string): void {
+    this.tareas = this.tareasService.getTareas();
+    this.mensaje = mensaje;
+    window.setTimeout(() => {
+      if (this.mensaje === mensaje) this.mensaje = '';
+    }, 2400);
+  }
 }
